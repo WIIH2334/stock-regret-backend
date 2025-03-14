@@ -10,7 +10,7 @@ const cache = new NodeCache({ stdTTL: 86400 });
 
 // Enable CORS for frontend (update with your Render frontend URL)
 app.use(cors({
-  origin: 'https://stock-regret-frontend.onrender.com'
+  origin: 'https://stock-regret.online'
 }));
 app.use(express.json());
 
