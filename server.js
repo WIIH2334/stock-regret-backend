@@ -1,20 +1,20 @@
+
+
 const express = require('express');
 const yahooFinance = require('yahoo-finance2').default;
 const NodeCache = require('node-cache');
 const cors = require('cors');
-const fs = require('fs'); // Added for reading stocks.json
+const fs = require('fs');
 const app = express();
 const cache = new NodeCache({ stdTTL: 86400 });
 
-const PORT = 3000;
-
-// Enable CORS for http://localhost:8000
+// Enable CORS for frontend (update with your Render frontend URL)
 app.use(cors({
-  origin: 'http://localhost:8000'
+  origin: 'https://stock-regret-frontend.onrender.com'
 }));
 app.use(express.json());
 
-// New endpoint to serve all stocks
+// Serve all stocks
 app.get('/stocks', (req, res) => {
   try {
     const stocks = JSON.parse(fs.readFileSync('stocks.json', 'utf8'));
@@ -25,7 +25,7 @@ app.get('/stocks', (req, res) => {
   }
 });
 
-// Existing endpoint for stock prices
+// Fetch historical stock price
 app.get('/stock/:ticker/:date', async (req, res) => {
   const { ticker, date } = req.params;
   const cacheKey = `${ticker}-${date}`;
@@ -59,6 +59,8 @@ app.get('/stock/:ticker/:date', async (req, res) => {
   }
 });
 
+// Use Render's assigned port, fallback to 3000 locally
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
